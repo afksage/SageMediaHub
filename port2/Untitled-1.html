@@ -1,0 +1,415 @@
+<!--
+Figma-style Rich Portfolio - Single-file HTML
+Features:
+- Responsive, modern layout inspired by Figma designs
+- Clean CSS with variables, glassmorphism, gradients, soft shadows
+- Hero, About, Skills, Projects (with modal), Testimonials, Contact
+- Small JS for interactivity (menu toggle, project modal, smooth scroll)
+- Replace placeholder images/text with your own
+
+Usage: Save as `index.html` and open in a browser. No build tools required.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Figma-style Portfolio — Your Name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#020B2D;--panel:#081A40;--primary:#0A3D91;--accent:#1F6AFF;--glow:#2B7CFF;--text:#E4ECFF;--muted:#8FA4FF;}
+
+    :root{
+      --bg: #0f1724; /* deep navy */
+      --card: rgba(255,255,255,0.04);
+      --glass: rgba(255,255,255,0.06);
+      --accent: 236 72 153; /* pink */
+      --accent2: 59 130 246; /* blue */
+      --muted: rgba(255,255,255,0.65);
+      --glass-border: rgba(255,255,255,0.08);
+      --radius: 14px;
+      --shadow-1: 0 6px 18px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      --glass-blur: 8px;
+      --container: 1200px;
+    }
+
+    *{box-sizing: border-box}
+    html,body {
+  background: radial-gradient(circle at top, #040F3D 0%, #020B2D 40%, #01061A 100%);
+
+      color: #fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:48px 24px;
+    }
+
+    .wrap{max-width:var(--container);margin:0 auto}
+
+    /* Top navigation */
+    header{
+      position:sticky;top:18px;z-index:60;backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius: 999px; padding:10px;display:flex;justify-content:center
+    }
+    .nav{
+      width:100%;max-width:var(--container);display:flex;align-items:center;gap:16px;padding:6px 12px
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg, rgba(var(--accent),0.85), rgba(var(--accent2),0.85));
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Space Grotesk';
+    }
+    nav ul{display:flex;gap:12px;list-style:none;margin:0;padding:0}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px}
+    nav a:hover{color:#fff;background:rgba(255,255,255,0.03)}
+
+    .cta{margin-left:auto;display:flex;gap:8px}
+    .btn{background:linear-gradient(90deg, rgba(var(--accent),0.9), rgba(var(--accent2),0.9));padding:10px 14px;border-radius:12px;color:white;font-weight:700;text-decoration:none;box-shadow:var(--shadow-1);}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns: 1fr 420px;gap:36px;align-items:center;padding:48px 0}
+    .hero-left{max-width:720px}
+    h1{font-family:'Space Grotesk';font-size:44px;margin:0 0 12px;letter-spacing:-0.02em}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(var(--accent),0.12), rgba(var(--accent2),0.08));color:rgba(255,255,255,0.85);padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px;margin-bottom:16px}
+    p.lead{color:var(--muted);font-size:18px;margin:0 0 22px}
+    .cta-row{display:flex;gap:12px}
+
+    /* Right card */
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-1);border:1px solid var(--glass-border);backdrop-filter: blur(var(--glass-blur));}
+    .profile{display:flex;gap:14px;align-items:center}
+    .avatar{width:84px;height:84px;border-radius:14px;overflow:hidden;flex:0 0 84px;border:1px solid rgba(255,255,255,0.06)}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta h3{margin:0;font-size:18px}
+    .meta p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .stats{display:flex;gap:12px;margin-top:14px}
+    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:10px;border-radius:12px;min-width:86px;text-align:center}
+    .stat b{display:block;font-size:16px}
+    .stat span{font-size:13px;color:var(--muted)}
+
+    /* Sections */
+    section{margin:48px 0}
+    h2.section-title{font-size:20px;margin:0 0 18px}
+
+    .grid{display:grid;gap:18px}
+    .two{grid-template-columns:repeat(2,1fr)}
+    .three{grid-template-columns:repeat(3,1fr)}
+
+    /* Skills */
+    .skill-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-weight:600}
+
+    /* Project cards */
+    .project{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.04);transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s;cursor:pointer}
+    .project:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(2,6,23,0.6)}
+    .thumb{height:160px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg, rgba(var(--accent),0.12), rgba(var(--accent2),0.12))}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .project h3{margin:0 0 8px;font-size:16px}
+    .project p{margin:0;color:var(--muted);font-size:14px}
+    .tags{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .tag{font-size:12px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:linear-gradient(180deg, rgba(1,2,6,0.6), rgba(1,2,6,0.85));display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
+    .modal.open{opacity:1;pointer-events:auto}
+    .modal-card{width:min(960px,98%);background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.04);display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .modal .close{position:absolute;right:28px;top:28px;background:transparent;border:0;color:var(--muted);font-size:20px}
+
+    /* Testimonials */
+    .testimonial{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Contact */
+    form{display:grid;gap:12px}
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:12px;border-radius:10px;color:#fff}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.45)}
+    .muted{color:var(--muted);font-size:13px}
+
+    footer{padding:24px 0;color:rgba(255,255,255,0.6)}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{grid-template-columns:1fr;}
+      .modal-card{grid-template-columns:1fr}
+      nav ul{display:none}
+    }
+
+    @media (max-width:600px){
+      h1{font-size:32px}
+      body{padding:18px}
+      .logo{width:40px;height:40px}
+    }
+
+    /* micro-animations */
+    .floaty{animation: floaty 6s ease-in-out infinite}
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Noel Osei Addo</h1>
+    <p class="hero-title">Designer</p>
+  </header>
+  <header>
+    <div class="nav wrap">
+      <div class="brand">
+        <div class="logo">YN</div>
+        <div>
+          <div style="font-weight:800">Your Name</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Product designer • Frontend dev</div>
+        </div>
+      </div>
+
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="cta">
+        <a href="#contact" class="btn">Hire me</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-left">
+        <span class="eyebrow">Design systems & interfaces</span>
+        <h1>Crafting delightful product experiences — from idea to pixel-perfect UI.</h1>
+        <p class="lead">I build clean, accessible interfaces and animation-driven micro-interactions. Currently focused on design systems and frontend architecture for fast, delightful apps.</p>
+        <div class="cta-row">
+          <a href="#projects" class="btn">View work</a>
+          <a href="#contact" style="background:transparent;border-radius:12px;padding:10px 14px;color:var(--muted);text-decoration:none;border:1px solid rgba(255,255,255,0.04);font-weight:700">Download resume</a>
+        </div>
+
+        <div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+          <div class="skill-pill">🧭 Product Strategy</div>
+          <div class="skill-pill">🎨 UI Design</div>
+          <div class="skill-pill">⚛️ Frontend (React)</div>
+          <div class="skill-pill">📦 Design systems</div>
+        </div>
+
+      </div>
+
+      <aside class="card floaty">
+        <div class="profile">
+          <div class="avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop&crop=faces" alt="avatar"></div>
+          <div class="meta">
+            <h3>Your Name</h3>
+            <p>Designer & Frontend engineer — creating pixel-perfect products.</p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <b>8+</b>
+            <span>Years</span>
+          </div>
+          <div class="stat">
+            <b>40+</b>
+            <span>Projects</span>
+          </div>
+          <div class="stat">
+            <b>25</b>
+            <span>Clients</span>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <a class="btn" href="#contact">Let's talk</a>
+          <a style="padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);text-decoration:none;color:var(--muted);font-weight:700" href="#projects">My case studies</a>
+        </div>
+      </aside>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">About me</h2>
+      <div class="card">
+        <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <p class="muted">I design and build user interfaces with a focus on clarity, performance, and delightful micro-interactions. I enjoy turning complex problems into intuitive user flows and scalable design systems.</p>
+            <ul style="margin-top:12px;color:var(--muted);">
+              <li>Design systems, component libraries, & documentation</li>
+              <li>Accessible, responsive UI built with modern tools</li>
+              <li>Prototyping, motion design, and developer handoff</li>
+            </ul>
+          </div>
+          <div style="min-width:240px;display:flex;flex-direction:column;gap:10px">
+            <div class="skill-pill">Figma • Miro • FigJam</div>
+            <div class="skill-pill">React • TypeScript • Tailwind</div>
+            <div class="skill-pill">Framer Motion • Lottie • Storybook</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title">Selected projects</h2>
+      <div class="grid three">
+
+        <!-- Project 1 -->
+        <div class="project" data-title="Design System // Acme" data-img="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" data-desc="A scalable design system and component library used across web & mobile. I built tokens, documentation, and a Storybook-driven workflow." onclick="openModal(this)">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1100&auto=format&fit=crop" alt="project"></div>
+          <h3>Design System — Acme</h3>
+          <p>Tokens, components, and docs that power a marketing & product platform.</p>
+          <div class="tags"><span class="tag">Design system</span><span class="tag">React</span><span class="tag">Accessibility</span></div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project" data-title="Mobile App // Kinetik" data-img="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop" data-desc="End-to-end mobile app design with onboarding flows, analytics, and a performance-first frontend.">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1100&auto=format&fit=crop" alt="project"></div>
+          <h3>Mobile App — Kinetik</h3>
+          <p>Onboarding + analytics focused mobile experience with delightful motion.</p>
+          <div class="tags"><span class="tag">Mobile</span><span class="tag">UX</span><span class="tag">Motion</span></div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project" data-title="Marketing Site // Nimbus" data-img="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop" data-desc="A fast-loading marketing site with A/B tested landing flows and a component-first approach.">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1100&auto=format&fit=crop" alt="project"></div>
+          <h3>Marketing Site — Nimbus</h3>
+          <p>High-conversion landing pages and componentized sections for marketing campaigns.</p>
+          <div class="tags"><span class="tag">Landing</span><span class="tag">Performance</span><span class="tag">SEO</span></div>
+        </div>
+
+        <!-- Add more projects as needed -->
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <h2 class="section-title">What people say</h2>
+      <div class="grid two">
+        <div class="testimonial">
+          <p>"Working with Your Name was a pleasure — they delivered a beautiful design system and helped us reduce time-to-market dramatically."</p>
+          <p style="margin-top:10px;font-weight:700">— Jane Doe, Product Lead</p>
+        </div>
+        <div class="testimonial">
+          <p>"Great attention to detail and excellent communication. The animations made the product feel alive."</p>
+          <p style="margin-top:10px;font-weight:700">— John Smith, CEO</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">Get in touch</h2>
+      <div class="grid two">
+        <div class="card">
+          <p class="muted">Looking for a designer or frontend engineer? I’m available for freelance and full-time roles. Tell me about your project — scope, timeline, and budget (if you have one).</p>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <div class="skill-pill">Open to remote</div>
+            <div class="skill-pill">Available: 2 months</div>
+            <div class="skill-pill">Timezone: GMT</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <form onsubmit="handleForm(event)">
+            <input type="text" name="name" placeholder="Your name" required />
+            <input type="email" name="email" placeholder="Your email" required />
+            <input type="text" name="subject" placeholder="Subject" />
+            <textarea name="message" rows="5" placeholder="Tell me about the project..." required></textarea>
+            <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+              <div class="muted">Or email me at <b style="color:#fff">youremail@domain.com</b></div>
+              <button class="btn" type="submit">Send message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>© <strong>Your Name</strong> — Built with care</div>
+        <div style="color:var(--muted);font-size:13px">Design inspired by modern Figma projects</div>
+      </div>
+    <div class="contact-item"><strong>Email:</strong> <a href="mailto:osei.noel00@gmail.com">osei.noel00@gmail.com</a></div>
+</footer>
+  </main>
+
+  <!-- Modal for project details -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card card">
+      <button class="close" onclick="closeModal()">✕</button>
+      <div>
+        <div id="modal-img" style="height:320px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg, rgba(var(--accent),0.12), rgba(var(--accent2),0.12))">
+          <img id="modalImageTag" src="" alt="project" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <h3 id="modal-title">Project title</h3>
+        <p id="modal-desc" class="muted">Project description</p>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag">Design</span>
+          <span class="tag">Frontend</span>
+        </div>
+      </div>
+      <aside style="padding-left:8px;border-left:1px solid rgba(255,255,255,0.03)">
+        <h4 style="margin-top:0">Project details</h4>
+        <p class="muted">Role: Lead designer & frontend engineer</p>
+        <p class="muted">Team: 3 designers, 4 engineers</p>
+        <div style="margin-top:14px;display:flex;gap:8px">
+          <a class="btn" href="#" style="font-size:13px">Live demo</a>
+          <a style="padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);text-decoration:none;color:var(--muted);font-weight:700" href="#">Case study</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const href = a.getAttribute('href');
+        if(href.length>1){
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      })
+    })
+
+    // Modal logic
+    function openModal(el){
+      const title = el.dataset.title || el.querySelector('h3').innerText;
+      const img = el.dataset.img || el.querySelector('img')?.src || '';
+      const desc = el.dataset.desc || el.querySelector('p')?.innerText || '';
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-desc').innerText = desc;
+      document.getElementById('modalImageTag').src = img;
+      const modal = document.getElementById('modal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){
+      const modal = document.getElementById('modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    }
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); })
+
+    // Simple form handler (demo only)
+    function handleForm(e){
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const payload = Object.fromEntries(data.entries());
+      console.log('message', payload);
+      alert('Thanks! Your message was sent (demo). Replace the handler to POST to your email endpoint.');
+      e.target.reset();
+    }
+
+    // small accessibility: trap tab in modal when open
+    document.getElementById('modal').addEventListener('keydown', function(e){
+      if(e.key !== 'Tab') return;
+      const focusable = this.querySelectorAll('a[href], button, textarea, input, select');
+      if(!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    })
+
+  </script>
+</body>
+</html>
+ 
